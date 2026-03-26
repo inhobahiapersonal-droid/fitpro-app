@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitPro — Personal Trainer App</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ==================== LOGIN SCREEN ==================== -->
+<div id="login-screen" class="login-screen">
+  <div class="login-bg">
+    <div class="login-bg-shape s1"></div>
+    <div class="login-bg-shape s2"></div>
+    <div class="login-bg-shape s3"></div>
+  </div>
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-icon"><i class="fas fa-dumbbell"></i></div>
+      <h1>FitPro</h1>
+      <p>Sistema de Personal Trainer</p>
+    </div>
+    <form class="login-form" onsubmit="doLogin(event)">
+      <div class="form-group">
+        <label><i class="fas fa-envelope"></i> E-mail</label>
+        <input type="email" id="login-email" value="personal@fitpro.com" placeholder="seu@email.com" required>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-lock"></i> Senha</label>
+        <div class="input-eye">
+          <input type="password" id="login-pass" value="123456" placeholder="••••••••" required>
+          <button type="button" class="eye-btn" onclick="togglePass()"><i class="fas fa-eye" id="eye-icon"></i></button>
+        </div>
+      </div>
+      <div class="login-remember">
+        <label class="checkbox-label"><input type="checkbox" checked> Lembrar-me</label>
+        <a href="#" class="forgot-link">Esqueceu a senha?</a>
+      </div>
+      <button type="submit" class="btn-login">
+        <span>Entrar</span>
+        <i class="fas fa-arrow-right"></i>
+      </button>
+      <div class="login-hint"><i class="fas fa-info-circle"></i> Use qualquer email e senha para entrar</div>
+    </form>
+  </div>
+</div>
+
+<!-- ==================== MAIN APP ==================== -->
+<div id="app" class="app hidden">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon-sm"><i class="fas fa-dumbbell"></i></div>
+        <span class="logo-text">FitPro</span>
+      </div>
+      <button class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    </div>
+
+    <div class="trainer-profile">
+      <img src="https://i.pravatar.cc/60?img=11" alt="Personal Trainer" class="trainer-avatar">
+      <div class="trainer-info">
+        <span class="trainer-name">Carlos Silva</span>
+        <span class="trainer-role">Personal Trainer</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <ul>
+        <li><a href="#" class="nav-link active" data-page="dashboard"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a></li>
+        <li><a href="#" class="nav-link" data-page="alunos"><i class="fas fa-users"></i><span>Alunos</span><span class="badge">12</span></a></li>
+        <li><a href="#" class="nav-link" data-page="treinos"><i class="fas fa-dumbbell"></i><span>Treinos</span></a></li>
+        <li><a href="#" class="nav-link" data-page="pagamentos"><i class="fas fa-dollar-sign"></i><span>Pagamentos</span><span class="badge badge-warn">3</span></a></li>
+        <li><a href="#" class="nav-link" data-page="chat"><i class="fas fa-comments"></i><span>Mensagens</span><span class="badge badge-green">5</span></a></li>
+        <li><a href="#" class="nav-link" data-page="videos"><i class="fas fa-play-circle"></i><span>Vídeos</span></a></li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i><span>Sair</span></button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content" id="main-content">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <div class="breadcrumb" id="breadcrumb">Dashboard</div>
+      </div>
+      <div class="topbar-right">
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Buscar aluno, treino...">
+        </div>
+        <button class="notif-btn"><i class="fas fa-bell"></i><span class="notif-dot"></span></button>
+        <img src="https://i.pravatar.cc/36?img=11" alt="avatar" class="topbar-avatar">
+      </div>
+    </header>
+
+    <!-- ========== DASHBOARD PAGE ========== -->
+    <section id="page-dashboard" class="page active">
+      <div class="page-header">
+        <h2>Dashboard <span class="page-subtitle">Visão Geral</span></h2>
+        <div class="page-date" id="current-date"></div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-icon ic-blue"><i class="fas fa-users"></i></div>
+          <div class="metric-info">
+            <span class="metric-value" id="m-alunos">12</span>
+            <span class="metric-label">Total de Alunos</span>
+          </div>
+          <div class="metric-trend up"><i class="fas fa-arrow-up"></i> 2 este mês</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon ic-green"><i class="fas fa-dumbbell"></i></div>
+          <div class="metric-info">
+            <span class="metric-value" id="m-treinos">28</span>
+            <span class="metric-label">Treinos Ativos</span>
+          </div>
+          <div class="metric-trend up"><i class="fas fa-arrow-up"></i> 5 novos</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon ic-orange"><i class="fas fa-dollar-sign"></i></div>
+          <div class="metric-info">
+            <span class="metric-value" id="m-receita">R$ 4.800</span>
+            <span class="metric-label">Receita do Mês</span>
+          </div>
+          <div class="metric-trend up"><i class="fas fa-arrow-up"></i> +12%</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon ic-red"><i class="fas fa-clock"></i></div>
+          <div class="metric-info">
+            <span class="metric-value" id="m-pendentes">3</span>
+            <span class="metric-label">Pagtos. Pendentes</span>
+          </div>
+          <div class="metric-trend down"><i class="fas fa-exclamation-circle"></i> Atenção</div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <!-- Chart -->
+        <div class="card chart-card">
+          <div class="card-header">
+            <h3><i class="fas fa-chart-bar"></i> Receita Mensal</h3>
+            <select class="card-select"><option>2025</option><option>2024</option></select>
+          </div>
+          <canvas id="revenueChart" height="220"></canvas>
+        </div>
+
+        <!-- Próximas Sessões -->
+        <div class="card sessions-card">
+          <div class="card-header">
+            <h3><i class="fas fa-calendar-alt"></i> Próximas Sessões</h3>
+            <a href="#" class="card-link">Ver todas</a>
+          </div>
+          <div class="sessions-list" id="sessions-list"></div>
+        </div>
+
+        <!-- Distribuição por Objetivo -->
+        <div class="card donut-card">
+          <div class="card-header">
+            <h3><i class="fas fa-bullseye"></i> Objetivos</h3>
+          </div>
+          <canvas id="goalChart" height="200"></canvas>
+          <div class="donut-legend" id="donut-legend"></div>
+        </div>
+
+        <!-- Atividades Recentes -->
+        <div class="card activity-card">
+          <div class="card-header">
+            <h3><i class="fas fa-history"></i> Atividades Recentes</h3>
+          </div>
+          <div class="activity-list" id="activity-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== ALUNOS PAGE ========== -->
+    <section id="page-alunos" class="page">
+      <div class="page-header">
+        <h2>Alunos <span class="page-subtitle">Gestão de Alunos</span></h2>
+        <button class="btn-primary" onclick="openModal('modal-add-aluno')"><i class="fas fa-plus"></i> Novo Aluno</button>
+      </div>
+
+      <div class="filters-bar">
+        <div class="search-filter">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Buscar aluno..." id="search-aluno" oninput="filterAlunos()">
+        </div>
+        <select class="filter-select" id="filter-status-aluno" onchange="filterAlunos()">
+          <option value="">Todos os Status</option>
+          <option value="Ativo">Ativo</option>
+          <option value="Inativo">Inativo</option>
+        </select>
+        <select class="filter-select" id="filter-nivel" onchange="filterAlunos()">
+          <option value="">Todos os Níveis</option>
+          <option value="Iniciante">Iniciante</option>
+          <option value="Intermediário">Intermediário</option>
+          <option value="Avançado">Avançado</option>
+        </select>
+      </div>
+
+      <div class="alunos-grid" id="alunos-grid"></div>
+    </section>
+
+    <!-- ========== PERFIL ALUNO (sub-page) ========== -->
+    <section id="page-perfil-aluno" class="page">
+      <div class="page-header">
+        <button class="btn-back" onclick="goBack('alunos')"><i class="fas fa-arrow-left"></i> Voltar</button>
+        <h2 id="perfil-aluno-nome">Perfil do Aluno</h2>
+        <button class="btn-primary" onclick="openModal('modal-add-treino')"><i class="fas fa-plus"></i> Adicionar Treino</button>
+      </div>
+      <div id="perfil-aluno-content"></div>
+    </section>
+
+    <!-- ========== TREINOS PAGE ========== -->
+    <section id="page-treinos" class="page">
+      <div class="page-header">
+        <h2>Treinos <span class="page-subtitle">Gerenciar Planos</span></h2>
+        <button class="btn-primary" onclick="openModal('modal-novo-treino')"><i class="fas fa-plus"></i> Novo Treino</button>
+      </div>
+
+      <div class="filters-bar">
+        <div class="search-filter">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Buscar treino ou aluno..." id="search-treino" oninput="filterTreinos()">
+        </div>
+        <select class="filter-select" id="filter-aluno-treino" onchange="filterTreinos()">
+          <option value="">Todos os Alunos</option>
+        </select>
+      </div>
+
+      <div class="treinos-list" id="treinos-list"></div>
+    </section>
+
+    <!-- ========== PAGAMENTOS PAGE ========== -->
+    <section id="page-pagamentos" class="page">
+      <div class="page-header">
+        <h2>Pagamentos <span class="page-subtitle">Financeiro</span></h2>
+        <button class="btn-primary" onclick="openModal('modal-nova-cobranca')"><i class="fas fa-plus"></i> Nova Cobrança</button>
+      </div>
+
+      <div class="financeiro-metrics">
+        <div class="fin-card">
+          <i class="fas fa-check-circle" style="color:var(--green)"></i>
+          <div>
+            <strong id="fin-recebido">R$ 3.600</strong>
+            <span>Recebido</span>
+          </div>
+        </div>
+        <div class="fin-card">
+          <i class="fas fa-hourglass-half" style="color:var(--orange)"></i>
+          <div>
+            <strong id="fin-pendente">R$ 900</strong>
+            <span>Pendente</span>
+          </div>
+        </div>
+        <div class="fin-card">
+          <i class="fas fa-exclamation-triangle" style="color:#FF4C4C"></i>
+          <div>
+            <strong id="fin-atrasado">R$ 300</strong>
+            <span>Atrasado</span>
+          </div>
+        </div>
+        <div class="fin-card">
+          <i class="fas fa-calendar-check" style="color:var(--blue)"></i>
+          <div>
+            <strong id="fin-total">R$ 4.800</strong>
+            <span>Total do Mês</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fas fa-list"></i> Lista de Pagamentos</h3>
+          <select class="card-select" id="filter-pagto" onchange="filterPagamentos()">
+            <option value="">Todos</option>
+            <option value="Pago">Pago</option>
+            <option value="Pendente">Pendente</option>
+            <option value="Atrasado">Atrasado</option>
+          </select>
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table" id="pagamentos-table">
+            <thead>
+              <tr>
+                <th>Aluno</th>
+                <th>Plano</th>
+                <th>Valor</th>
+                <th>Vencimento</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="pagamentos-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CHAT PAGE ========== -->
+    <section id="page-chat" class="page">
+      <div class="page-header">
+        <h2>Mensagens <span class="page-subtitle">Chat com Alunos</span></h2>
+      </div>
+      <div class="chat-layout">
+        <div class="chat-sidebar">
+          <div class="chat-search">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Buscar conversa..." id="search-chat" oninput="filterChat()">
+          </div>
+          <div class="chat-list" id="chat-list"></div>
+        </div>
+        <div class="chat-window" id="chat-window">
+          <div class="chat-empty">
+            <i class="fas fa-comments"></i>
+            <p>Selecione uma conversa para começar</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== VIDEOS PAGE ========== -->
+    <section id="page-videos" class="page">
+      <div class="page-header">
+        <h2>Biblioteca de Vídeos <span class="page-subtitle">Exercícios</span></h2>
+        <button class="btn-primary" onclick="openModal('modal-add-video')"><i class="fas fa-plus"></i> Adicionar Vídeo</button>
+      </div>
+
+      <div class="video-categories">
+        <button class="cat-btn active" data-cat="todos" onclick="filterVideos(this)">Todos</button>
+        <button class="cat-btn" data-cat="Peito" onclick="filterVideos(this)"><i class="fas fa-circle"></i> Peito</button>
+        <button class="cat-btn" data-cat="Costas" onclick="filterVideos(this)"><i class="fas fa-circle"></i> Costas</button>
+        <button class="cat-btn" data-cat="Pernas" onclick="filterVideos(this)"><i class="fas fa-circle"></i> Pernas</button>
+        <button class="cat-btn" data-cat="Ombros" onclick="filterVideos(this)"><i class="fas fa-circle"></i> Ombros</button>
+        <button class="cat-btn" data-cat="Braços" onclick="filterVideos(this)"><i class="fas fa-circle"></i> Braços</button>
+        <button class="cat-btn" data-cat="Core" onclick="filterVideos(this)"><i class="fas fa-circle"></i> Core</button>
+        <button class="cat-btn" data-cat="Cardio" onclick="filterVideos(this)"><i class="fas fa-circle"></i> Cardio</button>
+      </div>
+
+      <div class="videos-grid" id="videos-grid"></div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ==================== MODALS ==================== -->
+
+<!-- Modal: Adicionar Aluno -->
+<div class="modal-overlay" id="modal-add-aluno">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="fas fa-user-plus"></i> Novo Aluno</h3>
+      <button class="modal-close" onclick="closeModal('modal-add-aluno')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <form id="form-add-aluno" onsubmit="addAluno(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nome Completo *</label>
+            <input type="text" id="a-nome" placeholder="Ex: João Santos" required>
+          </div>
+          <div class="form-group">
+            <label>E-mail *</label>
+            <input type="email" id="a-email" placeholder="joao@email.com" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Telefone</label>
+            <input type="tel" id="a-tel" placeholder="(11) 99999-9999">
+          </div>
+          <div class="form-group">
+            <label>Data de Nascimento</label>
+            <input type="date" id="a-nasc">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nível</label>
+            <select id="a-nivel">
+              <option>Iniciante</option>
+              <option>Intermediário</option>
+              <option>Avançado</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Objetivo</label>
+            <select id="a-objetivo">
+              <option>Perda de Peso</option>
+              <option>Hipertrofia</option>
+              <option>Condicionamento</option>
+              <option>Reabilitação</option>
+              <option>Força</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Plano</label>
+          <select id="a-plano">
+            <option>Mensal — R$ 300</option>
+            <option>Trimestral — R$ 800</option>
+            <option>Semestral — R$ 1.500</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Anamnese / Observações</label>
+          <textarea id="a-anamnese" rows="3" placeholder="Histórico de saúde, lesões, restrições..."></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('modal-add-aluno')">Cancelar</button>
+          <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Salvar Aluno</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Novo Treino -->
+<div class="modal-overlay" id="modal-novo-treino">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3><i class="fas fa-dumbbell"></i> Criar Novo Treino</h3>
+      <button class="modal-close" onclick="closeModal('modal-novo-treino')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <form id="form-novo-treino" onsubmit="addTreino(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nome do Treino *</label>
+            <input type="text" id="t-nome" placeholder="Ex: Treino A — Peito e Tríceps" required>
+          </div>
+          <div class="form-group">
+            <label>Aluno *</label>
+            <select id="t-aluno" required></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Dia da Semana</label>
+            <select id="t-dia">
+              <option>Segunda-feira</option>
+              <option>Terça-feira</option>
+              <option>Quarta-feira</option>
+              <option>Quinta-feira</option>
+              <option>Sexta-feira</option>
+              <option>Sábado</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Duração Estimada</label>
+            <input type="text" id="t-duracao" placeholder="Ex: 60 min">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Objetivo do Treino</label>
+          <input type="text" id="t-objetivo" placeholder="Ex: Hipertrofia de peito e tríceps">
+        </div>
+
+        <div class="exercicios-builder">
+          <div class="exer-header">
+            <h4><i class="fas fa-list"></i> Exercícios</h4>
+            <button type="button" class="btn-sm-green" onclick="addExercicioRow()"><i class="fas fa-plus"></i> Adicionar</button>
+          </div>
+          <div id="exercicios-rows">
+            <!-- rows added dynamically -->
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('modal-novo-treino')">Cancelar</button>
+          <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Salvar Treino</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Nova Cobrança -->
+<div class="modal-overlay" id="modal-nova-cobranca">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="fas fa-file-invoice-dollar"></i> Nova Cobrança</h3>
+      <button class="modal-close" onclick="closeModal('modal-nova-cobranca')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <form id="form-nova-cobranca" onsubmit="addCobranca(event)">
+        <div class="form-group">
+          <label>Aluno *</label>
+          <select id="c-aluno" required></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Plano</label>
+            <select id="c-plano" onchange="autoFillValor()">
+              <option data-valor="300">Mensal — R$ 300</option>
+              <option data-valor="800">Trimestral — R$ 800</option>
+              <option data-valor="1500">Semestral — R$ 1.500</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Valor (R$) *</label>
+            <input type="number" id="c-valor" value="300" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Vencimento *</label>
+            <input type="date" id="c-vencimento" required>
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="c-status">
+              <option>Pendente</option>
+              <option>Pago</option>
+              <option>Atrasado</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('modal-nova-cobranca')">Cancelar</button>
+          <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Salvar Cobrança</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Adicionar Vídeo -->
+<div class="modal-overlay" id="modal-add-video">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="fas fa-video"></i> Adicionar Vídeo</h3>
+      <button class="modal-close" onclick="closeModal('modal-add-video')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <form id="form-add-video" onsubmit="addVideo(event)">
+        <div class="form-group">
+          <label>Título do Exercício *</label>
+          <input type="text" id="v-titulo" placeholder="Ex: Supino Reto com Barra" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Categoria</label>
+            <select id="v-categoria">
+              <option>Peito</option>
+              <option>Costas</option>
+              <option>Pernas</option>
+              <option>Ombros</option>
+              <option>Braços</option>
+              <option>Core</option>
+              <option>Cardio</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Dificuldade</label>
+            <select id="v-dificuldade">
+              <option>Iniciante</option>
+              <option>Intermediário</option>
+              <option>Avançado</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>URL do Vídeo (YouTube)</label>
+            <input type="url" id="v-url" placeholder="https://youtube.com/watch?v=...">
+          </div>
+          <div class="form-group">
+            <label>Duração</label>
+            <input type="text" id="v-duracao" placeholder="Ex: 3:45">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Descrição</label>
+          <textarea id="v-desc" rows="2" placeholder="Instruções de execução..."></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('modal-add-video')">Cancelar</button>
+          <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Salvar Vídeo</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Player de Vídeo -->
+<div class="modal-overlay" id="modal-player">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3 id="player-titulo">Título do Vídeo</h3>
+      <button class="modal-close" onclick="closeModal('modal-player')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="video-player-container">
+        <iframe id="video-iframe" width="100%" height="400" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <div class="player-info" id="player-info"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
